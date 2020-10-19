@@ -1,0 +1,27 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model SoftwareProject.Models.admin
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="~/css/login.css" rel="stylesheet" />
+<!------ Include the above in your HEAD tag ---------->
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="~/images/user.png" id="icon" alt="User Icon" />
+        </div>
+        <!-- Login Form -->
+        <form method="post" asp-controller="user" asp-action="CreateUser">
+            <input type="text" asp-for="username" class="fadeIn second" placeholder="Kullanıcı Adı">
+            <input type="text" asp-for="password" class="fadeIn third" placeholder="Şifre">
+            <input type="submit" class="fadeIn fourth" value="Kayıt Ol">
+        </form>
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <a class="underlineHover" href="/Login/Index">Üyeliğim Var</a>
+        </div>
+    </div>
+    </div>

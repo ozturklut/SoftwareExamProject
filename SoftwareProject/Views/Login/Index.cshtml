@@ -1,0 +1,59 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model SoftwareProject.Models.admin
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="~/css/login.css" rel="stylesheet" />
+    <!------ Include the above in your HEAD tag ---------->
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+            <!-- Icon -->
+            <div class="fadeIn first">
+                <img src="~/images/user.png" id="icon" alt="User Icon" />
+            </div>
+            <!-- Login Form -->
+            <form>
+                <input type="text" id="username" asp-for="username" class="fadeIn second" placeholder="Kullanıcı Adı">
+                <input type="text" id="password" asp-for="password" class="fadeIn third" placeholder="Şifre">
+                <input type="button" id="submit" class="fadeIn fourth" value="Giriş Yap">
+            </form>
+            <div style="color:darkred;"  id="alrt">
+              
+            </div>
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <a class="underlineHover" href="/User/CreateUser">Kayıt Ol</a>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function () {
+        $("#submit").click(function () {
+            let user = $("#username").val();
+            let pass = $("#password").val();
+            $.ajax({
+                contentType: "application/json; charset=Utf-8",
+                dataType: "json",
+                type: "Get",
+                url: "/Login/LoginCheck",
+                data: {
+                    username: user,
+                    password: pass
+                },
+                success: function (ans) {
+                    if (ans == 1) {
+                        window.location.href = "/Home/Index";
+                    }
+                    else if (ans == 2) {
+                        window.location.href = "/User/Index";
+                    } else {
+                        $('#alrt').html("Kullanıcı girişi hatalı. Lütfen tekrar deneyin !");
+                    }
+                }
+            });
+        });
+    });
+</script>

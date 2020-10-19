@@ -1,0 +1,195 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model SoftwareProject.Models.headers
+@{
+    Layout = null;
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+
+    <title>Hello, world!</title>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Sınav Proje</a>
+
+
+    </nav>
+    <br />
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="card text-center">
+                <div class="card-header">
+                    Yeni Sınav Hazırla
+                </div>
+                <div class="card-body" style="min-width:700px;">
+                    <form asp-controller="Home" asp-action="icerikGetir" method="post">
+                        <select id="select_box" name="headerName" asp-for="HeaderName" asp-items="ViewBag.head" class="form-control">
+                            <option selected> Bir başlık seçiniz</option>
+                        </select>
+
+                        <br />
+                        <textarea rows="8" id="Content" class="form-control">
+                        --------------------------------------------------
+                        </textarea>
+
+                        <br />
+                        <hr />
+                        @for (var x = 1; x < 5; x++)
+                        {
+                            <h2 class="text-center">@x . Soru</h2>
+                            <hr />
+                            <br />
+                            <input type="text" class="form-control" id="soru_@x" placeholder="@x . Soruyu Yazınız." />
+                            <br />
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="@x-soru_cevap_1" placeholder="1.Cevap">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="@x-soru_cevap_2" placeholder="2.Cevap">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="@x-soru_cevap_3" placeholder="3.Cevap">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="@x-soru_cevap_4" placeholder="4.Cevap">
+                                </div>
+                            </div>
+                            <select class="form-control " id="@x-Answer">
+                                <option>Doğru Cevap Seç</option>
+                                <option>A</option>
+                                <option>B</option>
+                                <option>C</option>
+                                <option>D</option>
+                            </select>
+                            <br />
+                            <hr />
+                        }
+                        <input type="submit" id="CreateExam" name="name" class="form-control btn btn-success" value="Sınavı Oluştur" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $('body').on('change', '#select_box', function () {
+            //$('#show_only').val(this.value);
+            let head = $('#select_box').val();
+            console.log(head);
+
+            $.ajax({
+                contentType: "application/json; charset=Utf-8",
+                dataType: "json",
+                type: "Get",
+                url: "/Home/icerikGetir",
+                data: { headerName: head },
+                success: function (data) {
+                    $('#Content').val(data);
+                }
+            });
+        })
+
+        $("#CreateExam").click(function () {
+            let ex = {
+                Header: $("#select_box").val(),
+                Content: $("#Content").val()
+            };
+            let examID;
+
+            $.ajax({
+                type: "Post",
+                url: "/Home/CreateExam",
+                data: ex,
+                success: function (exID) {
+                    console.log(exID);
+                    examID = exID;
+                    if (examID != null) {
+                        let qs1 = {
+                            Question: $("#soru_1").val(),
+                            A: $("#1-soru_cevap_1").val(),
+                            B: $("#1-soru_cevap_2").val(),
+                            C: $("#1-soru_cevap_3").val(),
+                            D: $("#1-soru_cevap_4").val(),
+                            Answer: $("#1-Answer").val(),
+                            ExamID: examID
+                        };
+                        let qs2 = {
+                            Question: $("#soru_2").val(),
+                            A: $("#2-soru_cevap_1").val(),
+                            B: $("#2-soru_cevap_2").val(),
+                            C: $("#2-soru_cevap_3").val(),
+                            D: $("#2-soru_cevap_4").val(),
+                            Answer: $("#2-Answer").val(),
+                            ExamID: examID
+                        };
+                        let qs3 = {
+                            Question: $("#soru_3").val(),
+                            A: $("#3-soru_cevap_1").val(),
+                            B: $("#3-soru_cevap_2").val(),
+                            C: $("#3-soru_cevap_3").val(),
+                            D: $("#3-soru_cevap_4").val(),
+                            Answer: $("#3-Answer").val(),
+                            ExamID: examID
+                        };
+                        let qs4 = {
+                            Question: $("#soru_4").val(),
+                            A: $("#4-soru_cevap_1").val(),
+                            B: $("#4-soru_cevap_2").val(),
+                            C: $("#4-soru_cevap_3").val(),
+                            D: $("#4-soru_cevap_4").val(),
+                            Answer: $("#4-Answer").val(),
+                            ExamID: examID
+                        };
+
+                        $.ajax({
+                            type: "Post",
+                            url: "/Home/AddQuestion",
+                            data: qs1,
+                            success: function (exID) {
+                                console.log(exID);
+                            }
+                        })
+                        $.ajax({
+                            type: "Post",
+                            url: "/Home/AddQuestion",
+                            data: qs2,
+                            success: function (exID) {
+                                console.log(exID);
+                            }
+                        })
+                        $.ajax({
+                            type: "Post",
+                            url: "/Home/AddQuestion",
+                            data: qs3,
+                            success: function (exID) {
+                                console.log(exID);
+                            }
+                        })
+                        $.ajax({
+                            type: "Post",
+                            url: "/Home/AddQuestion",
+                            data: qs4,
+                            success: function (exID) {
+                                window.location.href = "/Home/GetExamList";
+                            }
+                        })
+                    }
+                }
+            })
+        
+    });
+    });
+
+</script>
